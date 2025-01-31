@@ -6,27 +6,27 @@ import LanguageSwitcher from "./LanguageSwitcher";
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { user, logout } = useContext(AuthContext); // ✅ Get user from context
+  const { user, logout } = useContext(AuthContext);
 
   return (
     <nav style={styles.navbar}>
       {/* Left Side - Brand */}
       <div style={styles.brand}>
-        <h2>{t("welcome")}</h2>
+        <h2 style={styles.brandText}>{t("welcome")}</h2>
       </div>
 
       {/* Center - Navigation Links */}
       <div style={styles.navLinks}>
         <Link to="/" style={styles.link}>Home</Link>
         <Link to="/search" style={styles.link}>Search</Link>
-        {user && <Link to="/bookings" style={styles.link}>Bookings</Link>} {/* ✅ Show only if logged in */}
+        {user && <Link to="/bookings" style={styles.link}>Bookings</Link>}
       </div>
 
       {/* Right Side - Auth & Language Switcher */}
       <div style={styles.authSection}>
         <LanguageSwitcher />
 
-        {/* ✅ Show Username & Logout if logged in */}
+        {/* Show Username & Logout if logged in */}
         {user ? (
           <div style={styles.userInfo}>
             <span style={styles.userName}>{user.name}</span>
@@ -43,11 +43,11 @@ const Navbar = () => {
   );
 };
 
-// ✅ Updated Styles
+// Updated Styles
 const styles = {
   navbar: {
     width: "100%",
-    backgroundColor: "#222",
+    backgroundColor: "#2c3e50", // Darker background for better contrast
     color: "white",
     padding: "1rem 2rem",
     display: "flex",
@@ -57,31 +57,40 @@ const styles = {
     top: 0,
     left: 0,
     zIndex: 1000,
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Add shadow for depth
   },
   brand: {
     fontSize: "1.5rem",
     fontWeight: "bold",
   },
+  brandText: {
+    margin: 0, // Remove default margin for h2
+  },
   navLinks: {
     display: "flex",
-    gap: "1.5rem",
+    gap: "2rem", // Increase gap for better spacing
   },
   link: {
     textDecoration: "none",
     color: "white",
     fontSize: "1rem",
     padding: "0.5rem",
+    transition: "color 0.3s ease", // Smooth hover effect
+  },
+  linkHover: {
+    color: "#f0a500", // Highlight color on hover
   },
   authSection: {
     display: "flex",
     alignItems: "center",
-    gap: "1rem",
+    gap: "1.5rem", // Increase gap for better spacing
   },
   authLink: {
     textDecoration: "none",
     color: "#f0a500",
     fontSize: "1rem",
     padding: "0.5rem",
+    transition: "color 0.3s ease", // Smooth hover effect
   },
   authButton: {
     textDecoration: "none",
@@ -90,6 +99,10 @@ const styles = {
     padding: "0.5rem 1rem",
     borderRadius: "5px",
     fontWeight: "bold",
+    transition: "background-color 0.3s ease", // Smooth hover effect
+  },
+  authButtonHover: {
+    backgroundColor: "#e09400", // Darker shade on hover
   },
   userInfo: {
     display: "flex",
@@ -101,12 +114,16 @@ const styles = {
     fontWeight: "bold",
   },
   logoutButton: {
-    backgroundColor: "red",
+    backgroundColor: "#e74c3c", // Red color for logout
     color: "white",
     border: "none",
     padding: "0.5rem 1rem",
     borderRadius: "5px",
     cursor: "pointer",
+    transition: "background-color 0.3s ease", // Smooth hover effect
+  },
+  logoutButtonHover: {
+    backgroundColor: "#c0392b", // Darker red on hover
   },
 };
 
