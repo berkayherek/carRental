@@ -16,7 +16,7 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchAvailableCars = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/cars");
+        const response = await axios.get("https://carrental-zbtl.onrender.com//api/cars");
         setCars(response.data);
       } catch (err) {
         setError("Failed to load available cars.");

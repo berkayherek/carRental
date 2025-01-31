@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/bookings"; // Adjust if needed
+const API_URL = "https://carrental-zbtl.onrender.com//api/bookings"; // Adjust if needed
 
 // ✅ Ensure the function is correctly named and exported
 export const createBooking = async (bookingData) => {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/offices";
+const API_URL = "https://carrental-zbtl.onrender.com//api/offices";
 
 export const getNearestOffices = async (latitude, longitude) => {
     try {
