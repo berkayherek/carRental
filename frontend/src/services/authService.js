@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://carrental-zbtl.onrender.com//api/auth"; // Adjust to match backend URL
+const API_URL = "https://carrental-zbtl.onrender.com/api/auth"; // Correct URL
 
 export const register = async (email, password, name) => {
   try {
