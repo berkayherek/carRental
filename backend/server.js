@@ -15,9 +15,10 @@ const app = express();
 
 // ✅ Fixed CORS Policy
 app.use(cors({
-    origin: ["http://localhost:3000"], // ✅ Allow frontend
+    origin: 'https://carrental-1-eulj.onrender.com', // Replace with your frontend URL
+    methods: ['GET', 'POST'],
     credentials: true,
-}));
+  }));
 
 app.use(express.json());
 app.use(morgan("dev"));
