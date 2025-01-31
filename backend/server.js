@@ -15,10 +15,17 @@ const app = express();
 
 // ✅ Fixed CORS Policy
 app.use(cors({
+<<<<<<< HEAD
     origin: 'https://carrental-1-eulj.onrender.com', // Replace with your frontend URL
     methods: ['GET', 'POST'],
     credentials: true,
   }));
+=======
+  origin: 'https://carrental-1-eulj.onrender.com', // Replace with your frontend URL
+  methods: ['GET', 'POST'],
+  credentials: true,
+}));
+>>>>>>> 5467314ce0cdf6a3d16ad79bc0137a7ec43c41b2
 
 app.use(express.json());
 app.use(morgan("dev"));

@@ -7,48 +7,20 @@ import { FaBars, FaTimes } from "react-icons/fa"; // Icons for mobile menu
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { user, logout } = useContext(AuthContext);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  const { user, logout } = useContext(AuthContext); // ✅ Get user from context
 
   return (
     <nav style={styles.navbar}>
       {/* Left Side - Brand */}
       <div style={styles.brand}>
-        <h2 style={styles.brandText}>{t("welcome")}</h2>
-      </div>
-
-      {/* Mobile Menu Toggle Button */}
-      <div style={styles.mobileMenuIcon} onClick={toggleMobileMenu}>
-        {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+        <h2>{t("welcome")}</h2>
       </div>
 
       {/* Center - Navigation Links */}
-      <div
-        style={{
-          ...styles.navLinks,
-          ...(isMobileMenuOpen ? styles.navLinksMobile : {}),
-        }}
-      >
-        <Link to="/" style={styles.link} onClick={toggleMobileMenu}>
-          Home
-        </Link>
-        <Link to="/search" style={styles.link} onClick={toggleMobileMenu}>
-          Search
-        </Link>
-        {user && (
-          <>
-            <Link to="/bookings" style={styles.link} onClick={toggleMobileMenu}>
-              Bookings
-            </Link>
-            <Link to="/profile" style={styles.link} onClick={toggleMobileMenu}>
-              Profile
-            </Link>
-          </>
-        )}
+      <div style={styles.navLinks}>
+        <Link to="/" style={styles.link}>Home</Link>
+        <Link to="/search" style={styles.link}>Search</Link>
+        {user && <Link to="/bookings" style={styles.link}>Bookings</Link>} {/* ✅ Show only if logged in */}
       </div>
 
       {/* Right Side - Auth & Language Switcher */}
@@ -91,7 +63,7 @@ const Navbar = () => {
 const styles = {
   navbar: {
     width: "100%",
-    backgroundColor: "#2c3e50",
+    backgroundColor: "#222",
     color: "white",
     padding: "1rem 2rem",
     display: "flex",
@@ -101,54 +73,24 @@ const styles = {
     top: 0,
     left: 0,
     zIndex: 1000,
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   },
   brand: {
     fontSize: "1.5rem",
     fontWeight: "bold",
   },
-  brandText: {
-    margin: 0,
-  },
   navLinks: {
     display: "flex",
-    gap: "2rem",
-    alignItems: "center",
-    transition: "all 0.3s ease",
-  },
-  navLinksMobile: {
-    flexDirection: "column",
-    position: "absolute",
-    top: "100%",
-    left: 0,
-    width: "100%",
-    backgroundColor: "#2c3e50",
-    padding: "1rem",
-    gap: "1rem",
+    gap: "1.5rem",
   },
   link: {
     textDecoration: "none",
     color: "white",
     fontSize: "1rem",
     padding: "0.5rem",
-    transition: "color 0.3s ease",
-  },
-  linkHover: {
-    color: "#f0a500",
   },
   authSection: {
     display: "flex",
     alignItems: "center",
-    gap: "1.5rem",
-  },
-  authSectionMobile: {
-    flexDirection: "column",
-    position: "absolute",
-    top: "100%",
-    right: 0,
-    width: "100%",
-    backgroundColor: "#2c3e50",
-    padding: "1rem",
     gap: "1rem",
   },
   authLink: {
@@ -156,7 +98,6 @@ const styles = {
     color: "#f0a500",
     fontSize: "1rem",
     padding: "0.5rem",
-    transition: "color 0.3s ease",
   },
   authButton: {
     textDecoration: "none",
@@ -165,10 +106,6 @@ const styles = {
     padding: "0.5rem 1rem",
     borderRadius: "5px",
     fontWeight: "bold",
-    transition: "background-color 0.3s ease",
-  },
-  authButtonHover: {
-    backgroundColor: "#e09400",
   },
   userInfo: {
     display: "flex",
@@ -180,33 +117,12 @@ const styles = {
     fontWeight: "bold",
   },
   logoutButton: {
-    backgroundColor: "#e74c3c",
+    backgroundColor: "red",
     color: "white",
     border: "none",
     padding: "0.5rem 1rem",
     borderRadius: "5px",
     cursor: "pointer",
-    transition: "background-color 0.3s ease",
-  },
-  logoutButtonHover: {
-    backgroundColor: "#c0392b",
-  },
-  mobileMenuIcon: {
-    display: "none", // Hide by default
-    fontSize: "1.5rem",
-    cursor: "pointer",
-  },
-  // Media query for mobile responsiveness
-  "@media (max-width: 768px)": {
-    navLinks: {
-      display: "none", // Hide nav links on mobile
-    },
-    authSection: {
-      display: "none", // Hide auth section on mobile
-    },
-    mobileMenuIcon: {
-      display: "block", // Show mobile menu icon
-    },
   },
 };
 
