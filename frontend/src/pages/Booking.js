@@ -1,35 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { getUserBookings } from "../services/bookingService";
+import BookingForm from "../components/BookingForm"; // ✅ Import BookingForm
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
-const Booking = () => {
-  const [carId, setCarId] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+const Bookings = () => {
+  const { user } = useContext(AuthContext);
+  const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
 
-  const handleBooking = async () => {
-    // Call API to book car (implement bookingService.js)
-    navigate("/profile");
-  };
+  // ✅ Redirect to login if user is not logged in
+  useEffect(() => {
+    console.log("User in Bookings Page:", user); // Debugging step
+  
+    
+  
+    const fetchBookings = async () => {
+      try {
+        console.log("Fetching bookings for user:", user.id);
+        const userBookings = await getUserBookings(user.id);
+        console.log("Bookings received:", userBookings);
+        setBookings(userBookings);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      }
+    };
+  
+    fetchBookings();
+  }, [user, navigate]);
+  
+  
+
+  // ✅ Show a loading message instead of breaking the UI
+
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Book a Car</h2>
-      <div className="mb-4">
-        <label className="block">Car ID</label>
-        <input type="text" className="w-full p-2 border" value={carId} onChange={(e) => setCarId(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block">Start Date</label>
-        <input type="date" className="w-full p-2 border" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-      </div>
-      <div className="mb-4">
-        <label className="block">End Date</label>
-        <input type="date" className="w-full p-2 border" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-      </div>
-      <button className="bg-blue-500 text-white p-2 w-full" onClick={handleBooking}>Confirm Booking</button>
+      <h2 className="text-2xl font-bold mb-4">My Bookings</h2>
+
+      {/* ✅ Render Booking Form */}
+      <BookingForm />
+
+      <h3 className="text-xl font-semibold mt-6">Booking History</h3>
+      {bookings.length > 0 ? (
+        <ul className="space-y-2">
+          {bookings.map((booking) => (
+            <li key={booking.id} className="border p-4 rounded bg-white shadow">
+              <p><strong>Car ID:</strong> {booking.carId}</p>
+              <p><strong>Start Date:</strong> {booking.startDate}</p>
+              <p><strong>End Date:</strong> {booking.endDate}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No bookings found.</p>
+      )}
     </div>
   );
 };
 
-export default Booking;
+export default Bookings;

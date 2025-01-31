@@ -13,8 +13,12 @@ const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: "http://localhost:5000", credentials: true }));
+// ✅ Fixed CORS Policy
+app.use(cors({
+    origin: ["http://localhost:3000"], // ✅ Allow frontend
+    credentials: true,
+}));
+
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -24,11 +28,11 @@ app.use("/api/cars", carRoutes);
 app.use("/api/offices", officeRoutes);
 app.use("/api/bookings", bookingRoutes);
 
-// Serve Frontend (React Build)
-app.use(express.static(path.join(__dirname, "build"))); // ✅ Updated Path
+// ✅ Serve React Frontend (If deployed)
+app.use(express.static(path.join(__dirname, "build")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html")); // ✅ Updated Path
+    res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 // Global Error Handling Middleware

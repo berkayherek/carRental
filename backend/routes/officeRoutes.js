@@ -1,8 +1,8 @@
 const express = require("express");
-const { getOffices } = require("../controllers/officeController");
+const { getNearestOffices } = require("../controllers/officeController"); // ✅ Correct import
 
 const router = express.Router();
 
-router.get("/", getOffices);
+router.get("/", getNearestOffices); // ✅ Route to get nearest rental offices
 
 module.exports = router;

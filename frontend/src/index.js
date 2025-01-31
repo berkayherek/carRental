@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext"; // ✅ Keep AuthProvider h
 import App from "./App";
 import "./styles/global.css"; // Import Tailwind or global styles
 import "leaflet/dist/leaflet.css";
-
+import "./i18n"; // ✅ Import the i18n configuration
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

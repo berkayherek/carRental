@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/authService";  // ✅ Correct
-import "../styles/login.css"; // ✅ Works if `loginForm.jsx` is inside `src/components/`
-
-
-
+import { login } from "../services/authService";  // ✅ Correct path
+import "../styles/login.css"; // ✅ Make sure this file exists!
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -15,24 +12,29 @@ const LoginForm = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        console.log("🔄 Login button clicked!");
+    
         setLoading(true);
         setError("");
-    
+
         try {
-            const response = await login(email, password); // ✅ Use named function
-            if (response.token) {
-                localStorage.setItem("token", response.token);
-                navigate("/profile");
+            const session = await login(email, password);
+            console.log("✅ Appwrite Session:", session);
+
+            if (session) {
+                localStorage.setItem("token", session.$id); // Store session ID
+                localStorage.setItem("userId", session.userId); // Store user ID
+                navigate("/profile");  // Redirect to profile
             } else {
                 setError("Invalid credentials. Please try again.");
             }
         } catch (err) {
-            setError("Login failed. Please check your credentials.");
+            console.error("❌ Login failed:", err.message);
+            setError(err.message || "Login failed. Please check your credentials.");
         } finally {
             setLoading(false);
         }
     };
-    
 
     return (
         <div className="login-container">

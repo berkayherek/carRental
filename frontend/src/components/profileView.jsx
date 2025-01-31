@@ -1,19 +1,20 @@
-import { useContext } from "react";
-import AuthContext from "../context/AuthContext";
+import "../styles/Profile.css";
 
-const ProfileView = () => {
-    const { user, logout } = useContext(AuthContext);
-
-    if (!user) return <p>Loading...</p>;
+const ProfileView = ({ user, onLogout }) => {
+    if (!user) {
+        return <p>Loading...</p>;
+    }
 
     return (
-        <div>
-            <h2>Welcome, {user.name}</h2>
-            <p>Email: {user.email}</p>
-            <p>Country: {user.country}</p>
-            <p>City: {user.city}</p>
-            <p>Phone: {user.phone}</p>
-            <button onClick={logout}>Logout</button>
+        <div className="profile-container">
+            <div className="profile-box">
+                <h2>Welcome, {user.name}</h2>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Country:</strong> {user.country}</p>
+                <p><strong>City:</strong> {user.city}</p>
+                <p><strong>Phone:</strong> {user.phone}</p>
+                <button onClick={onLogout} className="logout-button">Logout</button>
+            </div>
         </div>
     );
 };

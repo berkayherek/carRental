@@ -1,46 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../services/authService";
-import "../styles/register.css";  // CSS for styling
+import { register } from "../services/authService";  // ✅ Correct import path
 
 const RegisterForm = () => {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        country: "",
-        city: "",
-        phone: ""
-    });
-
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+    const [country, setCountry] = useState("");
+    const [city, setCity] = useState("");
+    const [phone, setPhone] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // ✅ Handles input changes for all fields dynamically
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value
-        }));
-    };
-
-    // ✅ Handles form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError("");
+        setLoading(true);
 
         try {
-            const response = await authService.register(formData);
-            console.log("User registered successfully:", response);
-
-            // Redirect user to login page after successful registration
-            navigate("/login");
+            await register(name, email, password, country, city, phone);
+            navigate("/login");  // Redirect to login after successful registration
         } catch (err) {
             console.error("Registration failed:", err);
-            setError("Registration failed. Please check your input.");
+            setError(err.message || "Registration failed");
         } finally {
             setLoading(false);
         }
@@ -48,45 +31,17 @@ const RegisterForm = () => {
 
     return (
         <div className="register-container">
-            <div className="register-box">
+            <form onSubmit={handleSubmit}>
                 <h2>Register</h2>
                 {error && <p className="error-message">{error}</p>}
-                <form onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label>Name</label>
-                        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-                    </div>
-
-                    <div className="input-group">
-                        <label>Email</label>
-                        <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-                    </div>
-
-                    <div className="input-group">
-                        <label>Password</label>
-                        <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-                    </div>
-
-                    <div className="input-group">
-                        <label>Country</label>
-                        <input type="text" name="country" value={formData.country} onChange={handleChange} required />
-                    </div>
-
-                    <div className="input-group">
-                        <label>City</label>
-                        <input type="text" name="city" value={formData.city} onChange={handleChange} required />
-                    </div>
-
-                    <div className="input-group">
-                        <label>Phone</label>
-                        <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
-                    </div>
-
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Registering..." : "Register"}
-                    </button>
-                </form>
-            </div>
+                <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <input type="text" placeholder="Country" value={country} onChange={(e) => setCountry(e.target.value)} required />
+                <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} required />
+                <input type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                <button type="submit" disabled={loading}>{loading ? "Registering..." : "Register"}</button>
+            </form>
         </div>
     );
 };

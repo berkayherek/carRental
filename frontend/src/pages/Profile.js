@@ -1,32 +1,40 @@
-import React, { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { getUserBookings } from "../services/bookingService";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUser, logout } from "../services/userService";
+import ProfileView from "../components/profileView";
+import Navbar from "../components/Navbar";
 
 const Profile = () => {
-  const { user } = useContext(AuthContext);
-  const [bookings, setBookings] = useState([]);
+    const [user, setUser] = useState(null);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      const data = await getUserBookings(user.id);
-      setBookings(data);
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await getUser();
+            if (!userData) {
+                navigate("/login"); // Redirect if not logged in
+            } else {
+                setUser(userData);
+            }
+        };
+
+        fetchUser();
+    }, [navigate]);
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
     };
-    fetchBookings();
-  }, [user.id]);
 
-  return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Profile</h2>
-      <p><strong>Name:</strong> {user.name}</p>
-      <p><strong>Email:</strong> {user.email}</p>
-      <h3 className="text-xl font-semibold mt-6">Booking History</h3>
-      <ul>
-        {bookings.map((booking) => (
-          <li key={booking.id}>{booking.carId} - {booking.startDate} to {booking.endDate}</li>
-        ))}
-      </ul>
-    </div>
-  );
+    return (
+        <div>
+             <div>
+             <Navbar />
+            <h1>Profile</h1>
+            <ProfileView user={user} onLogout={handleLogout} />
+        </div>
+        </div>
+    );
 };
 
 export default Profile;

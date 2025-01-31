@@ -1,0 +1,43 @@
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.profile-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 400px;
+}
+
+h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 10px;
+    background: #ff4d4d;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+.logout-button:hover {
+    background: #ff3333;
+}

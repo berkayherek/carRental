@@ -1,41 +1,41 @@
-import { Client, Account, ID } from "appwrite";
+import axios from "axios";
 
-const client = new Client()
-  .setEndpoint("https://cloud.appwrite.io/v1") // Update if using a self-hosted Appwrite
-  .setProject("your-appwrite-project-id"); // Replace with your actual Appwrite Project ID
+const API_URL = "http://localhost:5000/api/auth"; // Adjust to match backend URL
 
-const account = new Account(client);
+export const register = async (email, password, name) => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, { email, password, name });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Registration failed");
+  }
+};
 
 export const login = async (email, password) => {
   try {
-    await account.createEmailSession(email, password);
-    return await account.get();
+    const response = await axios.post(`${API_URL}/login`, { email, password });
+    return response.data; // Returns `{ session, user }`
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(error.response?.data?.error || "Login failed");
   }
 };
 
-export const register = async (name, email, password) => {
+export const getUser = async (token) => {
   try {
-    await account.create(ID.unique(), email, password, name);
-    return await login(email, password);
+    const response = await axios.get(`${API_URL}/me`, {
+      headers: { Authorization: token },
+    });
+    return response.data;
   } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const loginWithGoogle = async () => {
-  try {
-    await account.createOAuth2Session("google");
-  } catch (error) {
-    throw new Error(error.message);
+    throw new Error("Failed to fetch user");
   }
 };
 
 export const logout = async () => {
   try {
-    await account.deleteSession("current");
+    await axios.post(`${API_URL}/logout`);
+    localStorage.removeItem("user");
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error("Logout failed");
   }
 };
