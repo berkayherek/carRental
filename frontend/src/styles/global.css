@@ -1,0 +1,11 @@
+/* src/styles/global.css */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+  }
+  .leaflet-container {
+    width: 100% !important;
+    height: 400px !important;
+    border-radius: 10px;
+  }
+  
