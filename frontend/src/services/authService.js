@@ -2,20 +2,14 @@ import axios from "axios";
 
 const API_URL = "https://carrental-zbtl.onrender.com/api/auth"; // Correct URL
 
-exports.register = async ({ email, password, name }) => {
+export const register = async (email, password, name) => {
   try {
-    // ✅ Generate a valid user ID (max 36 characters)
-    const userId = ID.unique(); 
-
-    // ✅ Correct order of parameters: userId, email, password, name
-    const user = await account.create(userId, email, password, name);
-    return user;
+    const response = await axios.post(`${API_URL}/register`, { email, password, name });
+    return response.data;
   } catch (error) {
-    console.error("Appwrite Registration Error:", error.message);
-    throw new Error(error.message || "Registration failed");
+    throw new Error(error.response?.data?.error || "Registration failed");
   }
 };
-
 
 export const login = async (email, password) => {
   try {
