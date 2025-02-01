@@ -52,33 +52,7 @@ Docker - Containerization for the frontend and backend
 GitHub Actions - CI/CD for automated deployment
 ⚙️ Backend Configuration (.env File)
 The backend is configured using Appwrite for database and authentication.
-Below is an example of the .env file:
 
-ini
-Kopyala
-APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
-APPWRITE_PROJECT_ID=679b5af30007d34ab3a0
-APPWRITE_API_KEY=your-api-key
-JWT_SECRET=your-secret-key
-🚀 Running the Project Locally
-1️⃣ Clone the Repository
-sh
-Kopyala
-git clone https://github.com/berkayherek/carRental.git
-cd carRental-main
-2️⃣ Setup Backend
-sh
-Kopyala
-cd backend
-npm install
-npm start  # Starts the Express server
-3️⃣ Setup Frontend
-sh
-Kopyala
-cd ../frontend
-npm install
-npm start  # Starts the React frontend
-The app should now be available at http://localhost:3000.
 
 🐳 Running with Docker
 1️⃣ Build and Run Using Docker Compose
