@@ -1,15 +1,17 @@
 const { Client, Account, Databases, ID } = require("node-appwrite");
 
+// Initialize Appwrite client
 const client = new Client()
-  .setEndpoint(process.env.APPWRITE_ENDPOINT)
-  .setProject(process.env.APPWRITE_PROJECT_ID)
-  .setKey(process.env.APPWRITE_API_KEY);
+  .setEndpoint(process.env.APPWRITE_ENDPOINT) // Your Appwrite endpoint
+  .setProject(process.env.APPWRITE_PROJECT_ID) // Your Appwrite project ID
+  .setKey(process.env.APPWRITE_API_KEY); // Your Appwrite API key
 
 const account = new Account(client);
 const databases = new Databases(client);
 
-const DATABASE_ID = process.env.APPWRITE_DATABASE_ID;
-const COLLECTION_USERS = process.env.APPWRITE_COLLECTION_USERS;
+// Load environment variables
+const DATABASE_ID = process.env.APPWRITE_DATABASE_ID; // Your Appwrite database ID
+const COLLECTION_USERS = process.env.APPWRITE_COLLECTION_USERS; // Your Appwrite users collection ID
 
 // Register User
 const registerUser = async (req, res) => {
@@ -38,30 +40,38 @@ const registerUser = async (req, res) => {
 
 // Login User
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      console.log("Received login request with:", { email, password }); // Log the request payload
-  
-      // Authenticate user with Appwrite
-      const session = await account.createSession(email, password);
-      console.log("Appwrite session created:", session); // Log the session
-  
-      // Fetch user details from your custom database
-      const user = await databases.listDocuments(DATABASE_ID, COLLECTION_USERS, [
-        `appwriteUserId=${session.userId}`,
-      ]);
-      console.log("User data from custom database:", user); // Log the user data
-  
-      // Return the session and user details
-      res.status(200).json({
-        session,
-        user: user.documents[0], // Return user data from your custom database
-      });
-    } catch (error) {
-      console.error("Login error:", error);
-      res.status(500).json({ message: "Login failed", error: error.message });
-    }
-  };
+  const { email, password } = req.body;
+
+  try {
+    // Authenticate user with Appwrite
+    const session = await account.createSession(email, password);
+
+    // Fetch user details from your custom database
+    const user = await databases.listDocuments(DATABASE_ID, COLLECTION_USERS, [
+      `appwriteUserId=${session.userId}`,
+    ]);
+
+    // Log the response before sending it
+    console.log("Backend response:", {
+      session: {
+        $id: session.$id,
+        userId: session.userId,
+      },
+      user: user.documents[0],
+    });
+
+    // Return the session and user details
+    res.status(200).json({
+      session: {
+        $id: session.$id,
+        userId: session.userId,
+      },
+      user: user.documents[0], // Return user data from your custom database
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login failed", error: error.message });
+  }
+};
 
 module.exports = { registerUser, loginUser };
