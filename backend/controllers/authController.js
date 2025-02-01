@@ -7,15 +7,19 @@ const client = new Client()
   .setProject(process.env.APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
 
-const account = new Account(client); // Add this line
+const account = new Account(client);
 
 // Register User
 const registerUser = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
+    // Generate a valid userId using Appwrite's ID.unique()
+    const userId = ID.unique();
+    console.log("Generated userId:", userId); // Log the userId for debugging
+
     // Create a new user in Appwrite
-    const user = await account.create(ID.unique(), email, password, name);
+    const user = await account.create(userId, email, password, name);
 
     // Generate JWT token (optional)
     const token = jwt.sign({ userId: user.$id }, process.env.JWT_SECRET, {
