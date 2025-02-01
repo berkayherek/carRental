@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "https://carrental-zbtl.onrender.com/api/auth"; // Correct URL
 
-exports.registerUser = async ({ email, password, name }) => {
+exports.register = async ({ email, password, name }) => {
   try {
     // ✅ Generate a valid user ID (max 36 characters)
     const userId = ID.unique(); 
