@@ -1,34 +1,33 @@
-const bcrypt = require("bcryptjs"); // Use bcryptjs instead of bcrypt
+const { Client, ID } = require("node-appwrite");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+
+// Initialize Appwrite client
+const client = new Client()
+  .setEndpoint(process.env.APPWRITE_ENDPOINT)
+  .setProject(process.env.APPWRITE_PROJECT_ID)
+  .setKey(process.env.APPWRITE_API_KEY);
 
 // Register User
 const registerUser = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+    // Create a new user in Appwrite
+    const user = await client.account.create(ID.unique(), email, password, name);
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
-    const user = new User({ email, password: hashedPassword, name });
-    await user.save();
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    // Generate JWT token (optional)
+    const token = jwt.sign({ userId: user.$id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+    // Return the user details
+    res.status(201).json({
+      user: { id: user.$id, name: user.name, email: user.email },
+      token, // Include the JWT token if needed
+    });
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Registration failed", error: error.message });
   }
 };
 
@@ -42,32 +41,24 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    // Authenticate user with Appwrite
+    const session = await client.account.createSession(email, password);
 
-    // Validate password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    // Generate JWT token (optional)
+    const token = jwt.sign({ userId: session.userId }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    // Return the expected structure
+    // Return the session and user details
     res.status(200).json({
-      session: { $id: token }, // Mock session ID
-      user: { id: user._id, name: user.name, email: user.email },
+      session,
+      user: { id: session.userId, email: session.email },
+      token, // Include the JWT token if needed
     });
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
 
-module.exports = { registerUser, loginUser }; // Export the functions
+module.exports = { registerUser, loginUser };
