@@ -38,26 +38,30 @@ const registerUser = async (req, res) => {
 
 // Login User
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Authenticate user with Appwrite
-    const session = await account.createSession(email, password);
-
-    // Fetch user details from your custom database
-    const user = await databases.listDocuments(DATABASE_ID, COLLECTION_USERS, [
-      `appwriteUserId=${session.userId}`,
-    ]);
-
-    // Return the session and user details
-    res.status(200).json({
-      session,
-      user: user.documents[0], // Return user data from your custom database
-    });
-  } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ message: "Login failed", error: error.message });
-  }
-};
+    const { email, password } = req.body;
+  
+    try {
+      console.log("Received login request with:", { email, password }); // Log the request payload
+  
+      // Authenticate user with Appwrite
+      const session = await account.createSession(email, password);
+      console.log("Appwrite session created:", session); // Log the session
+  
+      // Fetch user details from your custom database
+      const user = await databases.listDocuments(DATABASE_ID, COLLECTION_USERS, [
+        `appwriteUserId=${session.userId}`,
+      ]);
+      console.log("User data from custom database:", user); // Log the user data
+  
+      // Return the session and user details
+      res.status(200).json({
+        session,
+        user: user.documents[0], // Return user data from your custom database
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ message: "Login failed", error: error.message });
+    }
+  };
 
 module.exports = { registerUser, loginUser };

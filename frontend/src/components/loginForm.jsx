@@ -18,6 +18,7 @@ const LoginForm = () => {
     setError("");
   
     try {
+      console.log("Sending login request with:", { email, password }); // Log the request payload
       const response = await login(email, password);
       console.log("✅ Login response:", response);
   
