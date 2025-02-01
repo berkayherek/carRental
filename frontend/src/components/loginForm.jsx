@@ -13,14 +13,14 @@ const LoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("🔄 Login button clicked!");
-
+  
     setLoading(true);
     setError("");
-
+  
     try {
       const response = await login(email, password);
       console.log("✅ Login response:", response);
-
+  
       if (response.session && response.user) {
         localStorage.setItem("token", response.session.$id); // Store session ID
         localStorage.setItem("userId", response.user.id); // Store user ID

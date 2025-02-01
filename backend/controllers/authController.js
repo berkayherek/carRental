@@ -1,4 +1,4 @@
-const { Client, ID } = require("node-appwrite");
+const { Client, Account, ID } = require("node-appwrite");
 const jwt = require("jsonwebtoken");
 
 // Initialize Appwrite client
@@ -7,13 +7,15 @@ const client = new Client()
   .setProject(process.env.APPWRITE_PROJECT_ID)
   .setKey(process.env.APPWRITE_API_KEY);
 
+const account = new Account(client); // Add this line
+
 // Register User
 const registerUser = async (req, res) => {
   const { email, password, name } = req.body;
 
   try {
     // Create a new user in Appwrite
-    const user = await client.account.create(ID.unique(), email, password, name);
+    const user = await account.create(ID.unique(), email, password, name);
 
     // Generate JWT token (optional)
     const token = jwt.sign({ userId: user.$id }, process.env.JWT_SECRET, {
@@ -42,7 +44,7 @@ const loginUser = async (req, res) => {
     }
 
     // Authenticate user with Appwrite
-    const session = await client.account.createSession(email, password);
+    const session = await account.createSession(email, password);
 
     // Generate JWT token (optional)
     const token = jwt.sign({ userId: session.userId }, process.env.JWT_SECRET, {

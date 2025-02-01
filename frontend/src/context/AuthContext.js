@@ -16,18 +16,18 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await loginUser(email, password);
-      if (response.token) {
+      if (response.session && response.user) {
         const userData = {
           id: response.user.id,
-          name: response.user.name,
           email: response.user.email,
         };
         setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData)); // ✅ Store user only
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("token", response.session.$id); // Store session ID
       }
     } catch (error) {
       console.error("Login failed:", error);
-      throw new Error("Invalid credentials"); // ✅ Handle login errors properly
+      throw new Error("Invalid credentials");
     }
   };
 
